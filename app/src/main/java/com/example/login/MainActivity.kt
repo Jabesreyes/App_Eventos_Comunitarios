@@ -17,6 +17,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import okhttp3.OkHttpClient
+import okhttp3.FormBody
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.Call
+import okhttp3.Callback
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
@@ -56,59 +63,93 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
         }
     }
-    private fun signIn(email: String, password: String)
-    {
+    private fun signIn(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this){ task ->
-                if (task.isSuccessful){
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
-                    Toast.makeText(baseContext, user?.uid.toString(), Toast.LENGTH_SHORT).show()
-                    Toast.makeText(baseContext, "Autenticacion Exitosa", Toast.LENGTH_SHORT).show()
-
-                    //aqui vamos a ir a la segunda activity
-                    val i = Intent(this, MainActivity2::class.java)
-                    startActivity(i)
-
-                }
-                else
-                {
+                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                        if (tokenTask.isSuccessful) {
+                            val idToken = tokenTask.result?.token
+                            if (idToken != null) {
+                                sendTokenToBackend(idToken) // Enviar token al backend
+                            } else {
+                                Toast.makeText(baseContext, "Error: Token vacío", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(baseContext, "Error obteniendo token: ${tokenTask.exception}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
                     Toast.makeText(baseContext, "Error de email o contraseña", Toast.LENGTH_SHORT).show()
                 }
-
             }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == GOOGLE_SIGN_IN){
+        if (requestCode == GOOGLE_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try{
+            try {
                 val account = task.getResult(ApiException::class.java)
-                if(account != null){
-
+                if (account != null) {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     firebaseAuth.signInWithCredential(credential)
-                        .addOnCompleteListener(this){ task ->
-                            if (task.isSuccessful){
-                                Toast.makeText(baseContext, "Autenticacion Exitosa", Toast.LENGTH_SHORT).show()
-
-                                //aqui vamos a ir a la segunda activity
-                                val i = Intent(this, MainActivity2::class.java)
-                                startActivity(i)
-
+                        .addOnCompleteListener(this) { task ->
+                            if (task.isSuccessful) {
+                                val user = firebaseAuth.currentUser
+                                user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                                    if (tokenTask.isSuccessful) {
+                                        val idToken = tokenTask.result?.token
+                                        if (idToken != null) {
+                                            sendTokenToBackend(idToken) // Enviar token al backend
+                                        } else {
+                                            Toast.makeText(baseContext, "Error: Token vacío", Toast.LENGTH_SHORT).show()
+                                        }
+                                    } else {
+                                        Toast.makeText(baseContext, "Error obteniendo token: ${tokenTask.exception}", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            } else {
+                                Toast.makeText(baseContext, "Error de login con Google", Toast.LENGTH_SHORT).show()
                             }
-                            else
-                            {
-                                Toast.makeText(baseContext, "Error de login con google", Toast.LENGTH_SHORT).show()
-                            }
-
                         }
-
                 }
-            }catch (e: ApiException){
-                Toast.makeText(baseContext, e.toString(), Toast.LENGTH_SHORT).show()
+            } catch (e: ApiException) {
+                Toast.makeText(baseContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
+
+    private fun sendTokenToBackend(idToken: String) {
+        val client = OkHttpClient()
+        val requestBody = FormBody.Builder()
+            .add("idToken", idToken)
+            .build()
+
+        val request = Request.Builder()
+            .url("http://10.0.2.2:8000/api/test-user/")  // Reemplaza con tu endpoint backend
+            .header("Authorization", "Bearer $idToken")   // Agrega el token al encabezado
+            .post(requestBody)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                runOnUiThread {
+                    Toast.makeText(baseContext, "Error enviando token: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                runOnUiThread {
+                    if (response.isSuccessful) {
+                        Toast.makeText(baseContext, "Token enviado con éxito", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(baseContext, "Error en la respuesta del servidor: ${response.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+    }
+
 }
