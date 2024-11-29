@@ -17,3 +17,42 @@ local.properties
 # Firebase credentials
 google-services.json
 **/google-services.json
+
+# Python
+*.py[cod]
+__pycache__/
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+# Python
+*.py[cod]
+__pycache__/
+*$py.class
+
+# Específico de Django
+*.pyc
+__pycache__/
+
+
+# Django
+*.log
+*.pot
+*.pyc
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+static/
+staticfiles/
+

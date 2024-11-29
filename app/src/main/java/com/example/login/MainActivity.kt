@@ -122,6 +122,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendTokenToBackend(idToken: String) {
+
+        println("Token: $idToken")
+
         val client = OkHttpClient()
         val requestBody = FormBody.Builder()
             .add("idToken", idToken)
