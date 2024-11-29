@@ -8,6 +8,7 @@ android {
     namespace = "com.example.login"
     compileSdk = 34
 
+
     defaultConfig {
         applicationId = "com.example.login"
         minSdk = 24
@@ -27,6 +28,14 @@ android {
             )
         }
     }
+
+    packaging {
+        resources {
+            excludes.add("META-INF/INDEX.LIST")
+            excludes.add("META-INF/io.netty.versions.properties")
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -47,7 +56,16 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.androidx.ui.desktop)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.ktor.server.core)
+    implementation(libs.ktor.server.netty)
+    implementation(libs.logback.classic)
+    testImplementation(libs.ktor.server.tests)
+    testImplementation(libs.kotlin.test)
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+
 }
