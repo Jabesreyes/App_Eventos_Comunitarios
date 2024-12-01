@@ -107,3 +107,13 @@ class UserEventHistoryView(generics.ListAPIView):
         user = self.request.user
         # Usamos timezone.now() para obtener la fecha y hora actual con la zona horaria configurada
         return Event.objects.filter(rsvps__user=user, rsvps__status='confirmed', date__lt=timezone.now().date())
+
+
+# crear endpoint para obtener todos los eventos de hoy y a futuro
+class TodayAndFutureEventsView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        today = timezone.now().date()
+        future_events = Event.objects.filter(date__gte=today)
+        return future_events

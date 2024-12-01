@@ -6,7 +6,8 @@ from .views import (
     EventDetailView, 
     rsvp_event,
     comment_event,
-    UserEventHistoryView
+    UserEventHistoryView,
+    TodayAndFutureEventsView
 ) # Importa todas las vistas del módulo views
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     path('events/<int:event_id>/rsvp/', rsvp_event, name='rsvp-event'),
     path('events/<int:event_id>/comment/', comment_event, name='comment-event'),
     path('users/<int:user_id>/history/', UserEventHistoryView.as_view(), name='user-event-history'),
+    path('today-and-future-events/', TodayAndFutureEventsView.as_view(), name='today-and-future-events'),
 ]
