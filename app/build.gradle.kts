@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.logback.classic)
     testImplementation(libs.ktor.server.tests)
     testImplementation(libs.kotlin.test)
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.retrofit)
 
 }
