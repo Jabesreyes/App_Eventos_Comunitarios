@@ -1,4 +1,4 @@
-package com.example.login
+package com.example.login.ui
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,12 +9,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.login.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import okhttp3.OkHttpClient
@@ -41,18 +41,16 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val btnIngresar : Button = findViewById(R.id.btnIngresar)
-        val googleButton : Button = findViewById(R.id.googleButton)
-        val txtemail : TextView = findViewById(R.id.edtEmail)
-        val txtpass : TextView = findViewById(R.id.edtPassword)
-        firebaseAuth= Firebase.auth
-        btnIngresar.setOnClickListener()
-        {
+        val btnIngresar: Button = findViewById(R.id.btnIngresar)
+        val googleButton: Button = findViewById(R.id.googleButton)
+        val txtemail: TextView = findViewById(R.id.edtEmail)
+        val txtpass: TextView = findViewById(R.id.edtPassword)
+        firebaseAuth = Firebase.auth
+        btnIngresar.setOnClickListener {
             signIn(txtemail.text.toString(), txtpass.text.toString())
         }
 
-        googleButton.setOnClickListener()
-        {
+        googleButton.setOnClickListener {
             val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -63,16 +61,21 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
         }
     }
+
     private fun signIn(email: String, password: String) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
+                    val i = Intent(this, MainActivity2::class.java)
+                    startActivity(i)
+
                     user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
                         if (tokenTask.isSuccessful) {
                             val idToken = tokenTask.result?.token
                             if (idToken != null) {
-                                sendTokenToBackend(idToken) // Enviar token al backend
+                                saveTokenToPreferences(idToken)
+                                sendTokenToBackend(idToken)
                             } else {
                                 Toast.makeText(baseContext, "Error: Token vacío", Toast.LENGTH_SHORT).show()
                             }
@@ -97,12 +100,16 @@ class MainActivity : AppCompatActivity() {
                     firebaseAuth.signInWithCredential(credential)
                         .addOnCompleteListener(this) { task ->
                             if (task.isSuccessful) {
+                                val i = Intent(this, MainActivity2::class.java)
+                                startActivity(i)
+
                                 val user = firebaseAuth.currentUser
                                 user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
                                     if (tokenTask.isSuccessful) {
                                         val idToken = tokenTask.result?.token
                                         if (idToken != null) {
-                                            sendTokenToBackend(idToken) // Enviar token al backend
+                                            saveTokenToPreferences(idToken)
+                                            sendTokenToBackend(idToken)
                                         } else {
                                             Toast.makeText(baseContext, "Error: Token vacío", Toast.LENGTH_SHORT).show()
                                         }
@@ -122,7 +129,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendTokenToBackend(idToken: String) {
-
         println("Token: $idToken")
 
         val client = OkHttpClient()
@@ -155,4 +161,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun saveTokenToPreferences(idToken: String) {
+        val sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("auth_token", idToken)
+        editor.apply()
+    }
 }

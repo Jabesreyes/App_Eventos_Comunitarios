@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#8DFFDAB9"
     android:padding="15px"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
     <EditText
         android:id="@+id/edtEmail"
