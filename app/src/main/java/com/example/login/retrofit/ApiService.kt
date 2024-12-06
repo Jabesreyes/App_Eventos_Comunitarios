@@ -3,6 +3,7 @@ import com.example.login.model.Event
 import retrofit2.Call
 import retrofit2.http.*
 
+
 interface ApiService {
     @POST("api/events/create/")
     fun createEvent(
@@ -10,6 +11,7 @@ interface ApiService {
         @Body event: Event
     ): Call<Event>
 
+    //CREAR EVENTOS PASADOS
     @GET("api/events/")
     fun listEvents(): Call<List<Event>>
 
@@ -32,6 +34,8 @@ interface ApiService {
         @Body comment: Map<String, String>
     ): Call<Map<String, String>>
 
+    // FALTA HISTORIAL BOTON YA CREADO
+
     @GET("api/users/{user_id}/history/")
     fun getUserEventHistory(
         @Path("user_id") userId: Int,
@@ -43,6 +47,6 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Call<Map<String, String>>
 
-    @GET("api/events/today-and-future-events/")
+    @GET("api/today-and-future-events/")
     fun getCurrentAndFutureEvents(): Call<List<Event>>
 }

@@ -66,14 +66,37 @@ class Eventos : AppCompatActivity() {
             }
 
             // Llamada a la API para listar eventos
-            fetchEvents()
+            fetchCurrentAndFutureEvents()
+
+
         } else {
             Toast.makeText(this, "Error: Token de autenticación no disponible", Toast.LENGTH_SHORT).show()
         }
+
+        val btnSeeAllEvents : Button = findViewById(R.id.btnAllEvents)
+
+        btnSeeAllEvents.setOnClickListener(){
+            apiService.listEvents().enqueue(object : Callback<List<Event>> {
+                override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
+                    if (response.isSuccessful) {
+                        val events = response.body() ?: emptyList()
+                        setupRecyclerView(events)
+                    } else {
+                        Toast.makeText(this@Eventos, "Error al obtener todos los eventos: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Log.e("Eventos", "Error en la respuesta: ${response.errorBody()?.string()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Event>>, t: Throwable) {
+                    Toast.makeText(this@Eventos, "Error de red: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("Eventos", "Error: ${t.message}")
+                }
+            })
+        }
     }
 
-    private fun fetchEvents() {
-        apiService.listEvents().enqueue(object : Callback<List<Event>> {
+    private fun fetchCurrentAndFutureEvents() {
+        apiService.getCurrentAndFutureEvents().enqueue(object : Callback<List<Event>> {
             override fun onResponse(call: Call<List<Event>>, response: Response<List<Event>>) {
                 if (response.isSuccessful) {
                     val events = response.body() ?: emptyList()
@@ -94,7 +117,6 @@ class Eventos : AppCompatActivity() {
     private fun setupRecyclerView(events: List<Event>) {
         eventAdapter = EventAdapter(events) { event ->
             Toast.makeText(this, "Seleccionaste el evento: ${event.title}", Toast.LENGTH_SHORT).show()
-            // Llamar a obtenerDetallesEvento aquí si necesitas detalles del evento específico
             obtenerDetallesEvento(event.id)
         }
         recyclerView.adapter = eventAdapter
@@ -121,4 +143,6 @@ class Eventos : AppCompatActivity() {
             }
         })
     }
+
+
 }

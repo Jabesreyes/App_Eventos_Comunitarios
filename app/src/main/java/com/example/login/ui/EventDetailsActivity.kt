@@ -99,10 +99,10 @@ class EventDetailsActivity : AppCompatActivity() {
                     val event = response.body()
                     if (event != null) {
                         tvEventTitle.text = event.title
+                        tvEventDescription.text = event.description
                         tvEventDate.text = event.date
                         tvEventTime.text = event.time
                         tvEventLocation.text = event.location
-                        tvEventDescription.text = event.description
 
                         // Configura el botón de compartir para usar el evento cargado
                         btnShare.setOnClickListener {
