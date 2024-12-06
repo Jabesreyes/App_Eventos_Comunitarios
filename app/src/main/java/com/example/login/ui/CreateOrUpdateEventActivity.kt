@@ -101,7 +101,7 @@ class CreateOrUpdateEventActivity : AppCompatActivity() {
 
     private fun createEvent() {
         val event = Event(
-            id = 0,  // Se supone que el ID lo asignará el servidor
+            id = 0,
             title = edtTitle.text.toString(),
             date = edtDate.text.toString(),
             time = edtTime.text.toString(),
@@ -109,7 +109,7 @@ class CreateOrUpdateEventActivity : AppCompatActivity() {
             description = edtDescription.text.toString()
         )
 
-        // Obtén el token del almacenamiento compartido
+        // Obtenser el token del almacenamiento compartido
         val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
         val authToken = sharedPreferences.getString("auth_token", null)
 

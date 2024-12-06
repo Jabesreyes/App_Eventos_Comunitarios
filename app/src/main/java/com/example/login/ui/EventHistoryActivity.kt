@@ -87,7 +87,6 @@ class EventHistoryActivity : AppCompatActivity() {
     private fun setupRecyclerView(events: List<Event>) {
         eventAdapter = EventAdapter(events) { event ->
             Toast.makeText(this, "Seleccionaste el evento: ${event.title}", Toast.LENGTH_SHORT).show()
-            // Aquí puedes agregar cualquier funcionalidad adicional si se necesita
         }
         recyclerView.adapter = eventAdapter
     }

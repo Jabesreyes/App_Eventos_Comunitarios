@@ -137,8 +137,8 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         val request = Request.Builder()
-            .url("http://10.0.2.2:8000/api/test-user/")  // Reemplaza con tu endpoint backend
-            .header("Authorization", "Bearer $idToken")   // Agrega el token al encabezado
+            .url("http://10.0.2.2:8000/api/test-user/")
+            .header("Authorization", "Bearer $idToken")
             .post(requestBody)
             .build()
 
