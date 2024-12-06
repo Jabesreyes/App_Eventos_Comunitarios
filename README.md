@@ -27,7 +27,7 @@ Antes de comenzar, asegurese de tener instaldo:
 
 ## Autores ✒️
 * **Jabes Alfredo Flores Reyes FR230108** - **Programación, diseño, lógica**
-
+* **Josue Ezequiel Avalos Avalos AA200509** - **Desarrollo backend, api**
 
 
 ## Licencia 📄
