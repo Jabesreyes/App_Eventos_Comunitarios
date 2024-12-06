@@ -1,5 +1,6 @@
 package com.example.login.retrofit
 import com.example.login.model.Event
+import com.example.login.model.Notification
 import retrofit2.Call
 import retrofit2.http.*
 

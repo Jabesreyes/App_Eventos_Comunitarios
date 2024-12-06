@@ -24,15 +24,8 @@ class MainActivity2 : AppCompatActivity() {
         val btnHistorial: Button = findViewById(R.id.btnHistorial)
         btnHistorial.setOnClickListener {
             val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-            val userId = sharedPreferences.getInt("user_id", -1)
-
-            if (userId != -1) {
-                val intent = Intent(this, EventHistoryActivity::class.java)
-                intent.putExtra("user_id", userId)
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Error: ID de usuario no disponible", Toast.LENGTH_SHORT).show()
-            }
+            val intent = Intent(this, EventHistoryActivity::class.java)
+            startActivity(intent)
         }
 
         val ivBell: ImageView = findViewById(R.id.ivBell)
