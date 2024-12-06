@@ -26,6 +26,7 @@ Antes de comenzar, asegurese de tener instaldo:
 5. Realice las modificaciones necesarias y ejecute los comandos: git add -A para agregar los cambios, git commit -m "comentario" y finalmente git push -u origin SuRama para agregar los cambios al repositorio remoto.
 
 ## Autores ✒️
+* **Jabes Alfredo Flores Reyes FR230108** - **Programación, diseño, lógica**
 
 
 
@@ -42,7 +43,4 @@ La licenciante no puede revocar estas libertades en tanto usted siga los términ
 ## Enlaces de interés 👀
 
 * [Tablero en Trello] - https://trello.com/b/AEBmIr1a/gestion-de-proyecto-aplicacion-de-eventos-comunitarios
-* [Manual de usuario en la nube]
-* [Manual Técnico en la nube] 
 * [Video de funcionamiento] 
-* [Enlace a Mockups] 
