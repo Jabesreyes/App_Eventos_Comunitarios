@@ -43,4 +43,4 @@ La licenciante no puede revocar estas libertades en tanto usted siga los términ
 ## Enlaces de interés 👀
 
 * [Tablero en Trello] - https://trello.com/b/AEBmIr1a/gestion-de-proyecto-aplicacion-de-eventos-comunitarios
-* [Video de funcionamiento] 
+* [Video de funcionamiento] - https://udbedu-my.sharepoint.com/:v:/g/personal/fr230108_alumno_udb_edu_sv/EaqjtWg24UhMvdEM0oCWtBcBzfzReZKaEG-C9tA3yE4HWQ?e=DdifmJ
